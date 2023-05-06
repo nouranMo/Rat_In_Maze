@@ -1,0 +1,101 @@
+// test.cpp : This file contains the 'main' function. Program execution begins and ends there.
+//
+
+#include <SFML/Audio.hpp>
+#include <SFML/Graphics.hpp>
+#include<fstream>
+#include <iostream>
+using namespace std;
+using namespace sf;
+const int row = 7;
+const int col = 7;
+void inti(char arr[][col], Sprite maze[][7], Sprite player,int &playerx,int &playery) {
+    ifstream sin;
+    sin.open("C:\\Users\\a\\source\\repos\\test\\test\\maze.txt");
+
+    Texture grass, brick;
+    grass.loadFromFile("C:\\Users\\a\\Downloads\\OIP (1).jpg");
+    brick.loadFromFile("C:\\Users\\a\\Downloads\\block (1).jpg");
+
+    for (int i = 0; i < row; i++) {
+        for (int j = 0; j < col; j++) {
+
+            sin >> arr[i][j];
+            if (arr[i][j] == 'h') {
+                maze[i][j].setTexture(brick);
+                maze[i][j].setPosition(i, j); 
+            }
+            else {
+                if (arr[i][j]=='e') {
+                    playerx = i;
+                    playery = j;
+                }
+                maze[i][j].setTexture(grass);
+                maze[i][j].setPosition(i, j);
+            }
+        }
+    }
+    for (int i = 0; i < row; i++) {
+        for (int j = 0; j < col; j++) {
+            cout<< arr[i][j];
+        }
+        cout << endl;
+    }
+
+}
+
+int main()
+{
+    // Create the main window
+    RenderWindow window(VideoMode(800, 600), "SFML window");//800 width 600 height
+
+    //declare all of my variables that I need. Do any intializations here.
+    //need my char 2d array
+    char arr[row][col];
+
+    //need my Sprite 2d array
+    Sprite maze[row][col];
+     
+    //need my player
+    Sprite player;
+    int playerx, playery;
+ /*   Texture t;
+    t.loadFromFile("C:\\Users\\a\\Downloads\\R (1).png");
+    player.setTexture(t);
+    player.setPosition(400, 300);*/
+    inti(arr, maze, player,playerx,playery);
+
+    // Start the game loop -- this is where my logic happens
+    while (window.isOpen())
+    {
+        // Process events
+        Event event;
+
+
+        while (window.pollEvent(event))
+        {
+
+            // Close window: exit
+            if (event.type == Event::Closed) {
+                window.close();
+            }
+
+            // Escape pressed: exit
+            if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) {
+                window.close();
+            }
+        }
+
+        // Clear screen
+        window.clear();
+
+
+        // Draw any of the things that I declared to the screen that I want to be visible
+       // window.draw(player);
+
+        // Update the window
+        window.display();
+    }
+
+    return 0;
+}
